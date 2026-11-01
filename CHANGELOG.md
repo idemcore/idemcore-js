@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2 (2026-11-01)
+
+- Published with an npm provenance attestation: each version links to the public
+  source repository, commit and GitHub Actions run that built it.
+- Adds SECURITY.md and CONTRIBUTING.md; package metadata now lists the issue tracker.
+- No code changes.
+
 ## 0.1.1 (2026-11-01)
 
 - README: the quickstart and streaming examples now pass `model` explicitly

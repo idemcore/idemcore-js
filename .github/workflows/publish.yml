@@ -4,8 +4,8 @@ name: publish
 # npm trusted publisher: GitHub Actions, organization "idemcore", repository "idemcore-js",
 # workflow "publish.yml", environment "npm".
 # Requires npm CLI >= 11.5.1 and Node >= 22.14 (Node 24 below ships a recent npm).
-# npm generates provenance automatically only for public repositories; this repository
-# is private, so packages published from it carry no provenance attestation.
+# Each version carries an npm provenance attestation (Sigstore) that links it to this
+# public repository, the commit and the workflow run that built it.
 
 on:
   release:
@@ -31,4 +31,4 @@ jobs:
       - run: npm install -g npm@latest
       - run: npm ci
       - run: npm test
-      - run: npm publish --access public
+      - run: npm publish --provenance --access public
