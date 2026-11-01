@@ -13,4 +13,8 @@ export { chainDigest, chainFnv, logDigests, normalizeText, parseLog, promptHash,
 export type { LogLine } from "./hash.js";
 export { b64u, b64uDecode } from "./bytes.js";
 export { VERSION } from "./version.js";
+export { Session, ReplaySession, ReplayDivergence, record, replay, verifyTrace, compareModel, generateSigningKey, traceJson,
+  dumpsTrace, genesisHash, stepHash, manifestHash, requestHash, TRACE_FORMAT } from "./trace.js";
+export type { Trace, TraceStep, TraceManifest, TraceSignature, TraceVerification, VerifyTraceOptions, ReplayReport,
+  ReplayOptions, StepReport, SigningJwk, SessionOptions } from "./trace.js";
 export { Idemcore as default } from "./client.js";

@@ -29,6 +29,7 @@
   },
   "files": [
     "dist",
+    "bin",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
@@ -39,7 +40,7 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.json",
-    "test": "npm run build && node --test test/client.test.mjs test/verify.test.mjs",
+    "test": "npm run build && node --test test/client.test.mjs test/verify.test.mjs test/trace.test.mjs",
     "prepublishOnly": "npm test"
   },
   "devDependencies": {
@@ -51,5 +52,8 @@
   "bugs": {
     "url": "https://github.com/idemcore/idemcore-js/issues",
     "email": "support@idemcore.net"
+  },
+  "bin": {
+    "idemcore-trace": "bin/idemcore-trace.mjs"
   }
 }

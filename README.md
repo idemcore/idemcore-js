@@ -91,6 +91,27 @@ const res = await verifyReceipt(receipt, { logText, messages, salt, outputTokenI
 The production receipt-signing public key is bundled (`DEFAULT_TRUSTED_KEYS`); pass
 `keys: await client.keys()` to use the live key set instead.
 
+## Reproducible agents (record, replay, verify)
+
+Record a whole agent run (model calls with their receipts, tool calls, approvals) as a hash-chained trace,
+verify it offline, and replay it with a bit-identical check. Recorded tool results are fed back, so tools never run twice.
+Traces are interchangeable with the Python SDK.
+
+```js
+import { Session, replay } from "@idemcore/sdk";
+const s = new Session(client);
+const city = (await s.chat("Which city is the Eiffel Tower in? One word.", { maxTokens: 8 })).text;
+const w = await s.tool("get_weather", { city }, getWeather);
+const trace = await s.finish();
+```
+
+```bash
+npx idemcore-trace verify run.trace.json
+npx idemcore-trace replay run.trace.json
+```
+
+See [docs/agent-replay.md](docs/agent-replay.md) ([Tiếng Việt](docs/agent-replay.vi.md)) and `examples/agent-replay.mjs`.
+
 ## Errors
 
 All errors extend `IdemcoreError` with `status`, `type` and `message`:
