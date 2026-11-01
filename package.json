@@ -1,0 +1,50 @@
+{
+  "name": "@idemcore/sdk",
+  "version": "0.1.0",
+  "description": "Idemcore API client with signed receipts and local receipt verification. Zero dependencies; Node 18+, browsers, Workers.",
+  "license": "Apache-2.0",
+  "author": "Don Wick <don.wick@idemcore.net>",
+  "homepage": "https://idemcore.net/docs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idemcore/idemcore-js.git"
+  },
+  "keywords": [
+    "idemcore",
+    "llm",
+    "receipts",
+    "verification",
+    "ed25519",
+    "openai-compatible"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/client.test.mjs test/verify.test.mjs",
+    "prepublishOnly": "npm test"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

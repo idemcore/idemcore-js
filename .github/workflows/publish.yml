@@ -1,0 +1,34 @@
+name: publish
+
+# Publishes @idemcore/sdk to npm with trusted publishing (OIDC, no stored token).
+# npm trusted publisher: GitHub Actions, organization "idemcore", repository "idemcore-js",
+# workflow "publish.yml", environment "npm".
+# Requires npm CLI >= 11.5.1 and Node >= 22.14 (Node 24 below ships a recent npm).
+# npm generates provenance automatically only for public repositories; this repository
+# is private, so packages published from it carry no provenance attestation.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm test
+      - run: npm publish --access public
