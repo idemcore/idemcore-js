@@ -3,13 +3,13 @@
   "format": "idemcore-trace/r1",
   "session_id": "ses_000000000000000000000002",
   "created_at": "2026-11-01T00:00:00.000Z",
-  "sdk": "idemcore-js/0.1.2",
+  "sdk": "idemcore-js/0.2.0",
   "meta_json": "{\"fixture\":\"js\",\"unicode\":\"Hà Nội ✓\"}",
   "genesis": "e7990e02615f09bdcc30d41884d375791ac902862df2338cbdb5c5c644245f5a",
   "head": "5a307c432de0b04b5c6ca8473f48b8fa9c47304b12cb59a7d3f11eb1b1c8c9c3",
   "step_count": 5
  },
- "manifest_hash": "66e97f3da2587bf8914074ce1d94f433dff4a0207a5ae12147061090aff3c030",
+ "manifest_hash": "0ac35f3db2e11c465930b8f1314b9172f020214b30bc2432223a4446419df6d3",
  "steps": [
   {
    "index": 0,
