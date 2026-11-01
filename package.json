@@ -1,6 +1,6 @@
 {
   "name": "@idemcore/sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Idemcore API client with signed receipts and local receipt verification. Zero dependencies; Node 18+, browsers, Workers.",
   "license": "Apache-2.0",
   "author": "Don Wick <don.wick@idemcore.net>",
@@ -30,6 +30,7 @@
   "files": [
     "dist",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "sideEffects": false,
