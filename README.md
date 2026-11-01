@@ -42,8 +42,9 @@ so call it from your backend or a Worker.
 import { Idemcore } from "@idemcore/sdk";
 
 const client = new Idemcore();
+const model = (await client.models())[0].id;   // pass a model id explicitly
 
-const r = await client.chat("Name the three primary colours.", { maxTokens: 64 });
+const r = await client.chat("Name the three primary colours.", { model, maxTokens: 64 });
 console.log(r.text);
 console.log(r.receiptId);            // rcpt_...
 
@@ -61,7 +62,7 @@ check the commitments, so store the salt with the conversation.
 ### Streaming
 
 ```ts
-const stream = client.chatStream("Write a haiku about receipts.");
+const stream = client.chatStream("Write a haiku about receipts.", { model });
 for await (const chunk of stream) process.stdout.write(chunk.delta);
 const result = await stream.finalResult();   // receipt arrives with the last chunk
 console.log("\n" + result.receiptId);
