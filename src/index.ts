@@ -3,7 +3,7 @@ export type { ChatOptions, ChatResult, ClientOptions, Message, Privacy, ReceiptL
 export * from "./errors.js";
 export { verifyReceipt, loadKeys } from "./verify.js";
 export type { VerificationResult, VerifyOptions } from "./verify.js";
-export { checkFormat, signingPayload, verifyDisclosure, verifyL1, verifyL2, RECEIPT_VERSION } from "./receipt.js";
+export { checkFormat, signingPayload, verifyDisclosure, verifyL1, verifyL2, RECEIPT_VERSION, RECEIPT_VERSIONS, chainCheckField } from "./receipt.js";
 export type { Receipt, Result, Disclosure } from "./receipt.js";
 export { importJwk, importKeySet, keyIdFor } from "./keys.js";
 export type { Jwk, TrustedKey } from "./keys.js";

@@ -1,8 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { b64u, b64uDecode, checkFormat, DEFAULT_TRUSTED_KEYS, importKeySet, logDigests, verifyDisclosure,
-  verifyL1, verifyL2, verifyReceipt, loadKeys } from "../dist/index.js";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { b64u, b64uDecode, checkFormat, DEFAULT_TRUSTED_KEYS, importKeySet, importJwk, logDigests, verifyDisclosure,
+  verifyL1, verifyL2, verifyReceipt, loadKeys, RECEIPT_VERSION, RECEIPT_VERSIONS, chainCheckField } from "../dist/index.js";
 import { V } from "./mock.mjs";
+const _dir = dirname(fileURLToPath(import.meta.url));
+const V1 = JSON.parse(readFileSync(join(_dir, "fixtures/vectors_r1.json"), "utf8"));
+const V2 = JSON.parse(readFileSync(join(_dir, "fixtures/vectors_r2.json"), "utf8"));
 
 test("vector expectations", async () => {
   const keys = await importKeySet(V.keys, "test");
@@ -60,4 +66,23 @@ test("verifyReceipt", async () => {
   assert.equal((await verifyReceipt(V.receipts.tampered, { keys: V.keys })).ok, false);
   const ho = await verifyReceipt(V.receipts.hash_only, { keys: V.keys, messages: V.messages, salt: V.salt_b64u, outputTokenIds: V.output_ids });
   assert.ok(ho.ok, JSON.stringify(ho.levels));
+});
+
+test("r1 and r2 reference vectors verify", async () => {
+  assert.equal(RECEIPT_VERSION, "r2");
+  assert.deepEqual([...RECEIPT_VERSIONS], ["r1", "r2"]);
+  for (const [name, R, jwk] of [["r1", V1.receipt, V1.public_jwk], ["r2", V2.receipt, V2.public_jwk]]) {
+    const keys = [await importJwk(jwk, "test")];
+    assert.equal(R.receipt_version, name);
+    assert.equal(chainCheckField(R), name === "r2" ? "chain_check" : "chain_fnv");
+    assert.equal((await verifyL1(R, keys)).ok, true, name + " L1");
+    assert.equal((await verifyL2(R, V1.log)).ok, true, name + " L2");
+  }
+  const r = V2.receipt;
+  assert.ok(!("seed" in r) && !("chain_fnv" in r) && !("kernel_version" in r));
+  assert.ok(checkFormat({ ...r, seed: 0 }).includes("unknown field seed"));
+  assert.ok(checkFormat({ ...r, receipt_version: "r3" }).some((e) => e.includes("unsupported")));
+  const keys = [await importJwk(V2.public_jwk, "test")];
+  assert.equal((await verifyL1({ ...r, variant: 1 }, keys)).ok, false);
+  assert.ok((await verifyL2({ ...r, chain_check: "0".repeat(16) }, V1.log)).errors.includes("chain_check mismatch"));
 });

@@ -10,8 +10,11 @@ import { VERSION } from "./version.js";
 
 export const TRACE_FORMAT = "idemcore-trace/r1";
 const SIG_DOMAIN = utf8("idemcore-trace/r1\n");
-const SAME = ["model_id", "weights_hash", "decoding", "seed", "prompt_tokens", "output_tokens", "chain_digest", "chain_fnv", "finish_reason"];
-const ENV = ["engine_build", "kernel_version"];
+// Receipt field names (r1 first, r2 alias second). Compare by value across versions.
+const SAME: string[][] = [["model_id"], ["weights_hash"], ["decoding"], ["seed", "variant"], ["prompt_tokens"], ["output_tokens"], ["chain_digest"], ["chain_fnv", "chain_check"], ["finish_reason"]];
+const ENV: string[][] = [["engine_build"], ["kernel_version", "engine_version"]];
+const rf = (r: Record<string, unknown>, names: string[]) => { for (const n of names) if (n in r) return r[n]; return undefined; };
+const rn = (r: Record<string, unknown>, names: string[]) => names.find((n) => n in r) ?? names[0];
 
 export type StepType = "model" | "tool" | "note";
 export interface TraceStep { index: number; type: StepType; prev: string; body: Record<string, any>; hash: string }
@@ -321,9 +324,9 @@ export function compareModel(rec: Record<string, any>, n: ChatResult): StepRepor
     }
   } else rep.notes.push("token ids not disclosed on one side; compared chain digest and text");
   if (rec.output_text !== n.text) rep.diffs.push("output text differs");
-  for (const k of SAME) if (a[k] !== b[k]) rep.diffs.push(`receipt ${k} differs`);
+  for (const names of SAME) if (rf(a, names) !== rf(b, names)) rep.diffs.push(`receipt ${rn(a, names)} differs`);
   if (a.privacy === "full" && b.privacy === "full" && a.output_token_hash !== b.output_token_hash) rep.diffs.push("receipt output_token_hash differs");
-  for (const k of ENV) if (a[k] !== b[k]) rep.notes.push(`${k} changed: ${String(a[k])} -> ${String(b[k])}`);
+  for (const names of ENV) if (rf(a, names) !== rf(b, names)) rep.notes.push(`${rn(a, names)} changed: ${String(rf(a, names))} -> ${String(rf(b, names))}`);
   rep.identical = rep.diffs.length === 0;
   return rep;
 }
